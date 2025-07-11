@@ -4,8 +4,8 @@
   "description": "Test for converted React components",
   "main": "index.js",
   "scripts": {
-    "start": "npx http-server -o test-components.html",
-    "convert": "node converter.js"
+    "start": "npx http-server -o converting/test-components.html",
+    "convert": "node converting/utils/converter.js"
   },
   "dependencies": {
     "react": "^17.0.2",

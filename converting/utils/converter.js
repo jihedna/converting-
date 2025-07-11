@@ -22,24 +22,46 @@ function main() {
 function cleanupPreviousFiles() {
   console.log('Cleaning up previous functional component files...');
   
-  const files = fs.readdirSync(process.cwd());
+  const functionalDir = path.join(process.cwd(), 'converting', 'components', 'functional');
+  
+  // Create the functional directory if it doesn't exist
+  if (!fs.existsSync(functionalDir)) {
+    fs.mkdirSync(functionalDir, { recursive: true });
+    console.log(`Created directory: ${functionalDir}`);
+  }
+  
+  // Clean up existing functional components
+  const files = fs.readdirSync(functionalDir);
   
   files.forEach(file => {
-    if (file.endsWith('-functional.js')) {
-      fs.unlinkSync(path.join(process.cwd(), file));
+    if (file.endsWith('.js')) {
+      fs.unlinkSync(path.join(functionalDir, file));
       console.log(`Deleted: ${file}`);
     }
   });
 }
 
 /**
- * Process all component files in the current directory
+ * Process all component files in the class components directory
  */
 function processComponents() {
-  const files = fs.readdirSync(process.cwd())
-    .filter(file => file.endsWith('.js'))
-    .filter(file => !file.endsWith('-functional.js'))
-    .filter(file => !['converter.js', 'improvedConverter.js', 'convertToFunctional.js', 'convertClassToFunctional.js', 'fixComponents.js', 'fixedConverter.js'].includes(file));
+  const classDir = path.join(process.cwd(), 'converting', 'components', 'class');
+  const functionalDir = path.join(process.cwd(), 'converting', 'components', 'functional');
+  
+  // Check if class directory exists
+  if (!fs.existsSync(classDir)) {
+    console.error(`Error: Class components directory not found at ${classDir}`);
+    return;
+  }
+  
+  // Create functional directory if it doesn't exist
+  if (!fs.existsSync(functionalDir)) {
+    fs.mkdirSync(functionalDir, { recursive: true });
+    console.log(`Created directory: ${functionalDir}`);
+  }
+  
+  const files = fs.readdirSync(classDir)
+    .filter(file => file.endsWith('.js'));
   
   console.log(`Found ${files.length} JavaScript files to process...`);
   
@@ -50,7 +72,8 @@ function processComponents() {
     console.log(`Processing ${file}...`);
     
     try {
-      const content = fs.readFileSync(file, 'utf8');
+      const filePath = path.join(classDir, file);
+      const content = fs.readFileSync(filePath, 'utf8');
       
       // Check if it's a class component
       if (!content.includes('extends Component') && !content.includes('extends React.Component')) {
@@ -60,7 +83,7 @@ function processComponents() {
       }
       
       // Create the output file name
-      const outputFile = `${path.basename(file, '.js')}-functional.js`;
+      const outputFile = path.join(functionalDir, file);
       
       // Get the component name from the file
       const componentName = path.basename(file, '.js');
