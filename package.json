@@ -1,0 +1,14 @@
+{
+  "name": "react-components-test",
+  "version": "1.0.0",
+  "description": "Test for converted React components",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx http-server -o test-components.html",
+    "convert": "node converter.js"
+  },
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  }
+}

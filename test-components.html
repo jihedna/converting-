@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>React Components Test</title>
+  <!-- Load React -->
+  <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+  <!-- Load Babel for JSX support -->
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+    .component-container {
+      margin-bottom: 30px;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    button {
+      padding: 8px 16px;
+      margin: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <!-- Define all components directly in this file -->
+  <script type="text/babel">
+    // Counter Component
+    function Counter(props) {
+      const [count, setCount] = React.useState(0);
+      
+      const increment = () => {
+        setCount(prev => prev + 1);
+      };
+      
+      const decrement = () => {
+        setCount(prev => prev - 1);
+      };
+      
+      return (
+        <div style={{ textAlign: 'center' }}>
+          <h3>Counter: {count}</h3>
+          <button onClick={increment}>Increment</button>
+          <button onClick={decrement}>Decrement</button>
+        </div>
+      );
+    }
+
+    // Clock Component
+    function Clock(props) {
+      const [time, setTime] = React.useState(new Date().toLocaleTimeString());
+      
+      React.useEffect(() => {
+        const timer = setInterval(() => {
+          setTime(new Date().toLocaleTimeString());
+        }, 1000);
+        
+        return () => {
+          clearInterval(timer);
+        };
+      }, []);
+      
+      return (
+        <div className="clock">
+          <h3>Current Time</h3>
+          <h3>{time}</h3>
+        </div>
+      );
+    }
+
+    // Toggle Component
+    function Toggle(props) {
+      const [isOn, setIsOn] = React.useState(true);
+      
+      const toggle = () => {
+        setIsOn(prev => !prev);
+      };
+      
+      return (
+        <button onClick={toggle}>
+          {isOn ? 'ON' : 'OFF'}
+        </button>
+      );
+    }
+
+    // FetchUser Component
+    function FetchUser(props) {
+      const [user, setUser] = React.useState(null);
+      const [loading, setLoading] = React.useState(true);
+      
+      React.useEffect(() => {
+        fetch('https://jsonplaceholder.typicode.com/users/1')
+          .then(res => res.json())
+          .then(data => {
+            setUser(data);
+            setLoading(false);
+          });
+      }, []);
+      
+      return (
+        <div>
+          {loading ? (
+            <p>Loading user data...</p>
+          ) : (
+            <div>
+              <h3>{user && user.name}</h3>
+              <p>Email: {user && user.email}</p>
+              <p>Phone: {user && user.phone}</p>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // ColorBox Component
+    function ColorBox(props) {
+      const [color, setColor] = React.useState('lightblue');
+      
+      const changeColor = () => {
+        const colors = ['lightblue', 'lightgreen', 'lightcoral', 'lightgoldenrodyellow'];
+        const random = colors[Math.floor(Math.random() * colors.length)];
+        setColor(random);
+      };
+      
+      return (
+        <div style={{ backgroundColor: color, padding: '20px' }}>
+          <button onClick={changeColor}>Change Color</button>
+        </div>
+      );
+    }
+
+    // FormInput Component
+    function FormInput(props) {
+      const [inputValue, setInputValue] = React.useState('');
+
+      const handleChange = (e) => {
+        setInputValue(e.target.value);
+      };
+
+      return (
+        <div>
+          <input type="text" onChange={handleChange} />
+          <p>You typed: {inputValue}</p>
+        </div>
+      );
+    }
+
+    // ImageToggle Component
+    function ImageToggle(props) {
+      const [showFirst, setShowFirst] = React.useState(true);
+
+      const toggleImage = () => {
+        setShowFirst(prev => !prev);
+      };
+
+      const img1 = "https://via.placeholder.com/150/0000FF";
+      const img2 = "https://via.placeholder.com/150/FF0000";
+
+      return (
+        <div>
+          <img src={showFirst ? img1 : img2} alt="Toggle" />
+          <br />
+          <button onClick={toggleImage}>Toggle Image</button>
+        </div>
+      );
+    }
+
+    // Message Component
+    function Message(props) {
+      const [show, setShow] = React.useState(true);
+
+      const toggleMessage = () => {
+        setShow(prev => !prev);
+      };
+
+      return (
+        <div>
+          {show && <p>This is a message.</p>}
+          <button onClick={toggleMessage}>Toggle Message</button>
+        </div>
+      );
+    }
+
+    // ListDisplay Component
+    function ListDisplay(props) {
+      const items = ['Apple', 'Banana', 'Cherry'];
+
+      return (
+        <ul>
+          {items.map((item, i) => <li key={i}>{item}</li>)}
+        </ul>
+      );
+    }
+    
+    // Main App component
+    function App() {
+      return (
+        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+          <h1>React Functional Components Test</h1>
+          
+          <div className="component-container">
+            <h2>Counter Component</h2>
+            <Counter />
+          </div>
+          
+          <div className="component-container">
+            <h2>Clock Component</h2>
+            <Clock />
+          </div>
+          
+          <div className="component-container">
+            <h2>Toggle Component</h2>
+            <Toggle />
+          </div>
+          
+          <div className="component-container">
+            <h2>FetchUser Component</h2>
+            <FetchUser />
+          </div>
+          
+          <div className="component-container">
+            <h2>ColorBox Component</h2>
+            <ColorBox />
+          </div>
+          
+          <div className="component-container">
+            <h2>FormInput Component</h2>
+            <FormInput />
+          </div>
+          
+          <div className="component-container">
+            <h2>ImageToggle Component</h2>
+            <ImageToggle />
+          </div>
+          
+          <div className="component-container">
+            <h2>Message Component</h2>
+            <Message />
+          </div>
+          
+          <div className="component-container">
+            <h2>ListDisplay Component</h2>
+            <ListDisplay />
+          </div>
+        </div>
+      );
+    }
+
+    // Render the app
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+</body>
+</html>
